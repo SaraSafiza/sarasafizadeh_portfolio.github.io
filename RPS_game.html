@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rock Paper Scissors</title>
   <style>
-    body { font-family: sans-serif; background: #f5f5f5; display: flex; justify-content: center; padding: 2rem; }
+    body { font-family: sans-serif; background: #f5f5f5; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
     .container { max-width: 480px; width: 100%; }
 
     /* Score cards */
@@ -47,69 +47,129 @@
     /* Play again button */
     .replay-btn { font-size: 14px; border: 1px solid #ccc; border-radius: 8px; padding: 8px 24px; background: #fff; cursor: pointer; }
     .replay-btn:hover { background: #f5f5f5; }
+
+    /* Python code section */
+    .code-section { max-width: 480px; width: 100%; margin-top: 2rem; }
+    .code-section h3 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+    .code-section p  { font-size: 13px; color: #888; margin-bottom: 1rem; }
+    .code-section pre { background: #f4f4f4; border: 1px solid #ddd; border-radius: 8px; padding: 1.25rem; font-size: 13px; overflow-x: auto; line-height: 1.6; margin: 0; }
   </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- GAME SCREEN -->
-  <div id="game">
-    <div class="scores">
-      <div class="score-card">
-        <div class="score-label">Wins</div>
-        <div id="wins" class="score-value win-color">0</div>
+  <!-- GAME -->
+  <div class="container">
+
+    <div id="game">
+      <div class="scores">
+        <div class="score-card">
+          <div class="score-label">Wins</div>
+          <div id="wins" class="score-value win-color">0</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Ties</div>
+          <div id="ties" class="score-value tie-color">0</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Losses</div>
+          <div id="losses" class="score-value lose-color">0</div>
+        </div>
       </div>
-      <div class="score-card">
-        <div class="score-label">Ties</div>
-        <div id="ties" class="score-value tie-color">0</div>
+
+      <div class="moves">
+        <button class="move-btn" onclick="play('r')">🪨</button>
+        <button class="move-btn" onclick="play('p')">📄</button>
+        <button class="move-btn" onclick="play('s')">✂️</button>
       </div>
-      <div class="score-card">
-        <div class="score-label">Losses</div>
-        <div id="losses" class="score-value lose-color">0</div>
+      <div class="move-labels">
+        <span>Rock</span><span>Paper</span><span>Scissors</span>
       </div>
+
+      <div id="arena" class="arena">
+        <div class="placeholder">Choose your move above</div>
+      </div>
+
+      <button class="quit-btn" onclick="quit()">✕ Quit</button>
     </div>
 
-    <div class="moves">
-      <button class="move-btn" onclick="play('r')">🪨</button>
-      <button class="move-btn" onclick="play('p')">📄</button>
-      <button class="move-btn" onclick="play('s')">✂️</button>
-    </div>
-    <div class="move-labels">
-      <span>Rock</span><span>Paper</span><span>Scissors</span>
+    <div id="summary">
+      <div class="summary-emoji" id="summary-emoji"></div>
+      <div class="summary-title" id="summary-title"></div>
+      <div class="summary-sub"   id="summary-sub"></div>
+
+      <div class="scores">
+        <div class="score-card">
+          <div class="score-label">Wins</div>
+          <div id="s-wins" class="score-value win-color"></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Ties</div>
+          <div id="s-ties" class="score-value tie-color"></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Losses</div>
+          <div id="s-losses" class="score-value lose-color"></div>
+        </div>
+      </div>
+
+      <button class="replay-btn" onclick="restart()">↺ Play again</button>
     </div>
 
-    <div id="arena" class="arena">
-      <div class="placeholder">Choose your move above</div>
-    </div>
-
-    <button class="quit-btn" onclick="quit()">✕ Quit</button>
   </div>
 
-  <!-- SUMMARY SCREEN -->
-  <div id="summary">
-    <div class="summary-emoji" id="summary-emoji"></div>
-    <div class="summary-title" id="summary-title"></div>
-    <div class="summary-sub"   id="summary-sub"></div>
+  <!-- PYTHON CODE SECTION -->
+  <div class="code-section">
+    <h3>Original Python code</h3>
+    <p>This game was originally written in Python, then converted to JavaScript for the browser.</p>
+    <pre><code>import random
 
-    <div class="scores">
-      <div class="score-card">
-        <div class="score-label">Wins</div>
-        <div id="s-wins" class="score-value win-color"></div>
-      </div>
-      <div class="score-card">
-        <div class="score-label">Ties</div>
-        <div id="s-ties" class="score-value tie-color"></div>
-      </div>
-      <div class="score-card">
-        <div class="score-label">Losses</div>
-        <div id="s-losses" class="score-value lose-color"></div>
-      </div>
-    </div>
+r = 'ROCK'
+p = 'PAPER'
+s = 'SCISSORS'
+q = 'QUIT'
+Win = 0
+Tie = 0
+Lose = 0
+my_list = [r, p, s]
 
-    <button class="replay-btn" onclick="restart()">↺ Play again</button>
+while True:
+    random_three = random.choice(my_list)
+
+    print('ROCK, PAPER, SCISSORS')
+    print('%s Win, %s Lose, %s Tie' % (Win, Lose, Tie))
+    print('Enter your move: (r)ock (p)aper (s)cissors or (q)uit')
+
+    user_input = input('>')
+
+    if user_input == 'q':
+        print('You want to quit.')
+        break
+    elif user_input == 'p':
+        print('PAPER versus...')
+        print(random_three)
+    elif user_input == 'r':
+        print('ROCK versus...')
+        print(random_three)
+    elif user_input == 's':
+        print('SCISSORS versus...')
+        print(random_three)
+    else:
+        print('Invalid move. Please enter r, p, s or q.')
+        continue
+
+    if user_input == random_three:
+        print('It is a tie!')
+        Tie = Tie + 1
+    elif (user_input == 'p' and random_three == 'ROCK'
+        or user_input == 'r' and random_three == 'SCISSORS'
+        or user_input == 's' and random_three == 'PAPER'):
+        print('You win!')
+        Win = Win + 1
+    else:
+        print('You lose!')
+        Lose = Lose + 1
+    </code></pre>
   </div>
-
-</div>
 
 <script>
   const moves = {
@@ -196,57 +256,5 @@
   }
 </script>
 
-  <div style="max-width:480px; margin:2rem auto; font-family:sans-serif;">
-  <h3 style="font-size:16px; font-weight:500; margin-bottom:0.5rem;">Original Python code</h3>
-  <p style="font-size:13px; color:#888; margin-bottom:1rem;">This game was originally written in Python, then converted to JavaScript for the browser.</p>
-  <pre style="background:#f4f4f4; border:1px solid #ddd; border-radius:8px; padding:1.25rem; font-size:13px; overflow-x:auto; line-height:1.6;"><code>import random
-
-r = 'ROCK'
-p = 'PAPER'
-s = 'SCISSORS'
-q = 'QUIT'
-Win = 0
-Tie = 0
-Lose = 0
-my_list = [r, p, s]
-
-while True:
-    random_three = random.choice(my_list)
-
-    print('ROCK, PAPER, SCISSORS')
-    print('%s Win, %s Lose, %s Tie' % (Win, Lose, Tie))
-    print('Enter your move: (r)ock (p)aper (s)cissors or (q)uit')
-
-    user_input = input('>')
-
-    if user_input == 'q':
-        print('You want to quit.')
-        break
-    elif user_input == 'p':
-        print('PAPER versus...')
-        print(random_three)
-    elif user_input == 'r':
-        print('ROCK versus...')
-        print(random_three)
-    elif user_input == 's':
-        print('SCISSORS versus...')
-        print(random_three)
-    else:
-        print('Invalid move. Please enter r, p, s or q.')
-        continue
-
-    if user_input == random_three:
-        print('It is a tie!')
-        Tie = Tie + 1
-    elif (user_input == 'p' and random_three == 'ROCK'
-        or user_input == 'r' and random_three == 'SCISSORS'
-        or user_input == 's' and random_three == 'PAPER'):
-        print('You win!')
-        Win = Win + 1
-    else:
-        print('You lose!')
-        Lose = Lose + 1
-</code></pre>
-</div>
 </body>
 </html>
