@@ -1,215 +1,199 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock Paper Scissors</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; display: flex; justify-content: center; padding: 2rem; }
+    .container { max-width: 480px; width: 100%; }
+
+    /* Score cards */
+    .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+    .score-card { background: #ececec; border-radius: 8px; padding: 1rem; text-align: center; }
+    .score-label { font-size: 13px; color: #666; margin-bottom: 4px; }
+    .score-value { font-size: 28px; font-weight: 500; }
+    .win-color  { color: #2a9d5c; }
+    .tie-color  { color: #333;    }
+    .lose-color { color: #e24b4a; }
+
+    /* Move buttons */
+    .moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .move-btn { padding: 1.2rem 0; font-size: 32px; border-radius: 12px; border: 1px solid #ccc; background: #fff; cursor: pointer; transition: transform 0.1s; }
+    .move-btn:active { transform: scale(0.93); }
+    .move-labels { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; font-size: 13px; color: #999; }
+
+    /* Arena */
+    .arena { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.5rem; text-align: center; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+    .vs-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 8px; }
+    .player { text-align: center; }
+    .player-emoji { font-size: 44px; }
+    .player-label { font-size: 12px; color: #999; margin-top: 4px; }
+    .vs-text { font-size: 18px; color: #bbb; font-weight: 500; }
+    .result-text { font-size: 18px; font-weight: 500; }
+    .match-text { font-size: 13px; color: #999; margin-top: 2px; }
+    .placeholder { font-size: 14px; color: #bbb; }
+
+    /* Quit button */
+    .quit-btn { display: block; margin: 0 auto; font-size: 14px; color: #e24b4a; border: 1px solid #e24b4a; border-radius: 8px; padding: 8px 24px; background: transparent; cursor: pointer; }
+    .quit-btn:hover { background: #fef2f2; }
+
+    /* Summary screen */
+    #summary { display: none; text-align: center; }
+    .summary-emoji { font-size: 52px; margin-bottom: 1rem; }
+    .summary-title { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+    .summary-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+
+    /* Play again button */
+    .replay-btn { font-size: 14px; border: 1px solid #ccc; border-radius: 8px; padding: 8px 24px; background: #fff; cursor: pointer; }
+    .replay-btn:hover { background: #f5f5f5; }
   </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Rock Paper Scissors&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body { font-family: sans-serif; background: #f5f5f5; display: flex; justify-content: center; padding: 2rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.container { max-width: 480px; width: 100%; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Score cards */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.score-card { background: #ececec; border-radius: 8px; padding: 1rem; text-align: center; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.score-label { font-size: 13px; color: #666; margin-bottom: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.score-value { font-size: 28px; font-weight: 500; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.win-color<span class="Apple-converted-space">  </span>{ color: #2a9d5c; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tie-color<span class="Apple-converted-space">  </span>{ color: #333;<span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.lose-color { color: #e24b4a; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Move buttons */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.move-btn { padding: 1.2rem 0; font-size: 32px; border-radius: 12px; border: 1px solid #ccc; background: #fff; cursor: pointer; transition: transform 0.1s; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.move-btn:active { transform: scale(0.93); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.move-labels { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; font-size: 13px; color: #999; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Arena */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.arena { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.5rem; text-align: center; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.vs-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 8px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.player { text-align: center; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.player-emoji { font-size: 44px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.player-label { font-size: 12px; color: #999; margin-top: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.vs-text { font-size: 18px; color: #bbb; font-weight: 500; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.result-text { font-size: 18px; font-weight: 500; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.match-text { font-size: 13px; color: #999; margin-top: 2px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.placeholder { font-size: 14px; color: #bbb; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Quit button */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.quit-btn { display: block; margin: 0 auto; font-size: 14px; color: #e24b4a; border: 1px solid #e24b4a; border-radius: 8px; padding: 8px 24px; background: transparent; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.quit-btn:hover { background: #fef2f2; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Summary screen */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#summary { display: none; text-align: center; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.summary-emoji { font-size: 52px; margin-bottom: 1rem; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.summary-title { font-size: 20px; font-weight: 500; margin-bottom: 6px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.summary-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Play again button */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.replay-btn { font-size: 14px; border: 1px solid #ccc; border-radius: 8px; padding: 8px 24px; background: #fff; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.replay-btn:hover { background: #f5f5f5; }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1">&lt;div class="container"&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- GAME SCREEN --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="game"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="scores"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Wins&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="wins" class="score-value win-color"&gt;0&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Ties&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="ties" class="score-value tie-color"&gt;0&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Losses&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="losses" class="score-value lose-color"&gt;0&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="moves"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="move-btn" onclick="play('r')"&gt;🪨&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="move-btn" onclick="play('p')"&gt;📄&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="move-btn" onclick="play('s')"&gt;✂️&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="move-labels"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span&gt;Rock&lt;/span&gt;&lt;span&gt;Paper&lt;/span&gt;&lt;span&gt;Scissors&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="arena" class="arena"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="placeholder"&gt;Choose your move above&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="quit-btn" onclick="quit()"&gt;✕ Quit&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- SUMMARY SCREEN --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="summary"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="summary-emoji" id="summary-emoji"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="summary-title" id="summary-title"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="summary-sub" <span class="Apple-converted-space">  </span>id="summary-sub"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="scores"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Wins&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="s-wins" class="score-value win-color"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Ties&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="s-ties" class="score-value tie-color"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="score-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="score-label"&gt;Losses&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="s-losses" class="score-value lose-color"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="replay-btn" onclick="restart()"&gt;↺ Play again&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const moves = {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>r: { label: 'Rock', <span class="Apple-converted-space">    </span>emoji: '🪨' },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>p: { label: 'Paper',<span class="Apple-converted-space">    </span>emoji: '📄' },</p>
-<p class="p1"><span class="Apple-converted-space">    </span>s: { label: 'Scissors', emoji: '✂️' }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const cpuKeys = ['r', 'p', 's'];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let w = 0, t = 0, l = 0;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function getResult(user, cpu) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (user === cpu) return 'tie';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (</p>
-<p class="p1"><span class="Apple-converted-space">      </span>(user === 'r' &amp;&amp; cpu === 's') ||</p>
-<p class="p1"><span class="Apple-converted-space">      </span>(user === 'p' &amp;&amp; cpu === 'r') ||</p>
-<p class="p1"><span class="Apple-converted-space">      </span>(user === 's' &amp;&amp; cpu === 'p')</p>
-<p class="p1"><span class="Apple-converted-space">    </span>) return 'win';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return 'lose';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function play(user) {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const cpu<span class="Apple-converted-space">    </span>= cpuKeys[Math.floor(Math.random() * 3)];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const result = getResult(user, cpu);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let msg = '', color = '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (result === 'win') <span class="Apple-converted-space">      </span>{ w++; msg = 'You win!'; <span class="Apple-converted-space">    </span>color = '#2a9d5c'; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>else if (result === 'tie')<span class="Apple-converted-space">  </span>{ t++; msg = "It's a tie!";<span class="Apple-converted-space">  </span>color = '#333';<span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>else<span class="Apple-converted-space">                        </span>{ l++; msg = 'You lose!';<span class="Apple-converted-space">    </span>color = '#e24b4a'; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('wins').textContent <span class="Apple-converted-space">  </span>= w;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('ties').textContent <span class="Apple-converted-space">  </span>= t;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('losses').textContent = l;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('arena').innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="vs-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="player"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="player-emoji"&gt;${moves[user].emoji}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="player-label"&gt;You&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="vs-text"&gt;vs&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="player"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="player-emoji"&gt;${moves[cpu].emoji}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="player-label"&gt;Computer&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="result-text" style="color:${color};"&gt;${msg}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="match-text"&gt;${moves[user].label} vs ${moves[cpu].label}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function quit() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const total = w + t + l;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let emoji, title, sub;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (total === 0) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>emoji = '👋'; title = 'No rounds played'; sub = 'Come back anytime!';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else if (w &gt; l) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>emoji = '🏆'; title = 'You won overall!';<span class="Apple-converted-space">      </span>sub = `${total} round${total !== 1 ? 's' : ''} played`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else if (l &gt; w) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>emoji = '😬'; title = 'Computer won overall';<span class="Apple-converted-space">  </span>sub = `${total} round${total !== 1 ? 's' : ''} played`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>emoji = '🤝'; title = 'Overall tie!'; <span class="Apple-converted-space">          </span>sub = `${total} round${total !== 1 ? 's' : ''} played`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('summary-emoji').textContent = emoji;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('summary-title').textContent = title;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('summary-sub').textContent <span class="Apple-converted-space">  </span>= sub;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('s-wins').textContent<span class="Apple-converted-space">        </span>= w;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('s-ties').textContent<span class="Apple-converted-space">        </span>= t;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('s-losses').textContent<span class="Apple-converted-space">      </span>= l;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('game').style.display<span class="Apple-converted-space">    </span>= 'none';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('summary').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>function restart() {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>w = 0; t = 0; l = 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('wins').textContent<span class="Apple-converted-space">    </span>= 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('ties').textContent<span class="Apple-converted-space">    </span>= 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('losses').textContent<span class="Apple-converted-space">  </span>= 0;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('arena').innerHTML <span class="Apple-converted-space">    </span>= '&lt;div class="placeholder"&gt;Choose your move above&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('summary').style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('game').style.display<span class="Apple-converted-space">    </span>= 'block';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<div class="container">
+
+  <!-- GAME SCREEN -->
+  <div id="game">
+    <div class="scores">
+      <div class="score-card">
+        <div class="score-label">Wins</div>
+        <div id="wins" class="score-value win-color">0</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Ties</div>
+        <div id="ties" class="score-value tie-color">0</div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Losses</div>
+        <div id="losses" class="score-value lose-color">0</div>
+      </div>
+    </div>
+
+    <div class="moves">
+      <button class="move-btn" onclick="play('r')">🪨</button>
+      <button class="move-btn" onclick="play('p')">📄</button>
+      <button class="move-btn" onclick="play('s')">✂️</button>
+    </div>
+    <div class="move-labels">
+      <span>Rock</span><span>Paper</span><span>Scissors</span>
+    </div>
+
+    <div id="arena" class="arena">
+      <div class="placeholder">Choose your move above</div>
+    </div>
+
+    <button class="quit-btn" onclick="quit()">✕ Quit</button>
+  </div>
+
+  <!-- SUMMARY SCREEN -->
+  <div id="summary">
+    <div class="summary-emoji" id="summary-emoji"></div>
+    <div class="summary-title" id="summary-title"></div>
+    <div class="summary-sub"   id="summary-sub"></div>
+
+    <div class="scores">
+      <div class="score-card">
+        <div class="score-label">Wins</div>
+        <div id="s-wins" class="score-value win-color"></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Ties</div>
+        <div id="s-ties" class="score-value tie-color"></div>
+      </div>
+      <div class="score-card">
+        <div class="score-label">Losses</div>
+        <div id="s-losses" class="score-value lose-color"></div>
+      </div>
+    </div>
+
+    <button class="replay-btn" onclick="restart()">↺ Play again</button>
+  </div>
+
+</div>
+
+<script>
+  const moves = {
+    r: { label: 'Rock',     emoji: '🪨' },
+    p: { label: 'Paper',    emoji: '📄' },
+    s: { label: 'Scissors', emoji: '✂️' }
+  };
+  const cpuKeys = ['r', 'p', 's'];
+  let w = 0, t = 0, l = 0;
+
+  function getResult(user, cpu) {
+    if (user === cpu) return 'tie';
+    if (
+      (user === 'r' && cpu === 's') ||
+      (user === 'p' && cpu === 'r') ||
+      (user === 's' && cpu === 'p')
+    ) return 'win';
+    return 'lose';
+  }
+
+  function play(user) {
+    const cpu    = cpuKeys[Math.floor(Math.random() * 3)];
+    const result = getResult(user, cpu);
+
+    let msg = '', color = '';
+    if (result === 'win')       { w++; msg = 'You win!';     color = '#2a9d5c'; }
+    else if (result === 'tie')  { t++; msg = "It's a tie!";  color = '#333';    }
+    else                        { l++; msg = 'You lose!';    color = '#e24b4a'; }
+
+    document.getElementById('wins').textContent   = w;
+    document.getElementById('ties').textContent   = t;
+    document.getElementById('losses').textContent = l;
+
+    document.getElementById('arena').innerHTML = `
+      <div class="vs-row">
+        <div class="player">
+          <div class="player-emoji">${moves[user].emoji}</div>
+          <div class="player-label">You</div>
+        </div>
+        <div class="vs-text">vs</div>
+        <div class="player">
+          <div class="player-emoji">${moves[cpu].emoji}</div>
+          <div class="player-label">Computer</div>
+        </div>
+      </div>
+      <div class="result-text" style="color:${color};">${msg}</div>
+      <div class="match-text">${moves[user].label} vs ${moves[cpu].label}</div>
+    `;
+  }
+
+  function quit() {
+    const total = w + t + l;
+    let emoji, title, sub;
+
+    if (total === 0) {
+      emoji = '👋'; title = 'No rounds played'; sub = 'Come back anytime!';
+    } else if (w > l) {
+      emoji = '🏆'; title = 'You won overall!';      sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    } else if (l > w) {
+      emoji = '😬'; title = 'Computer won overall';  sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    } else {
+      emoji = '🤝'; title = 'Overall tie!';           sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    }
+
+    document.getElementById('summary-emoji').textContent = emoji;
+    document.getElementById('summary-title').textContent = title;
+    document.getElementById('summary-sub').textContent   = sub;
+    document.getElementById('s-wins').textContent        = w;
+    document.getElementById('s-ties').textContent        = t;
+    document.getElementById('s-losses').textContent      = l;
+
+    document.getElementById('game').style.display    = 'none';
+    document.getElementById('summary').style.display = 'block';
+  }
+
+  function restart() {
+    w = 0; t = 0; l = 0;
+    document.getElementById('wins').textContent    = 0;
+    document.getElementById('ties').textContent    = 0;
+    document.getElementById('losses').textContent  = 0;
+    document.getElementById('arena').innerHTML     = '<div class="placeholder">Choose your move above</div>';
+    document.getElementById('summary').style.display = 'none';
+    document.getElementById('game').style.display    = 'block';
+  }
+</script>
 </body>
 </html>
