@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rock Paper Scissors</title>
+  <style>
+    body { font-family: sans-serif; background: #f5f5f5; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+    .container { max-width: 480px; width: 100%; }
+
+    /* Score cards */
+    .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+    .score-card { background: #ececec; border-radius: 8px; padding: 1rem; text-align: center; }
+    .score-label { font-size: 13px; color: #666; margin-bottom: 4px; }
+    .score-value { font-size: 28px; font-weight: 500; }
+    .win-color  { color: #2a9d5c; }
+    .tie-color  { color: #333;    }
+    .lose-color { color: #e24b4a; }
+
+    /* Move buttons */
+    .moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .move-btn { padding: 1.2rem 0; font-size: 32px; border-radius: 12px; border: 1px solid #ccc; background: #fff; cursor: pointer; transition: transform 0.1s; }
+    .move-btn:active { transform: scale(0.93); }
+    .move-labels { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; font-size: 13px; color: #999; }
+
+    /* Arena */
+    .arena { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.5rem; text-align: center; min-height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 1rem; }
+    .vs-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 8px; }
+    .player { text-align: center; }
+    .player-emoji { font-size: 44px; }
+    .player-label { font-size: 12px; color: #999; margin-top: 4px; }
+    .vs-text { font-size: 18px; color: #bbb; font-weight: 500; }
+    .result-text { font-size: 18px; font-weight: 500; }
+    .match-text { font-size: 13px; color: #999; margin-top: 2px; }
+    .placeholder { font-size: 14px; color: #bbb; }
+
+    /* Quit button */
+    .quit-btn { display: block; margin: 0 auto; font-size: 14px; color: #e24b4a; border: 1px solid #e24b4a; border-radius: 8px; padding: 8px 24px; background: transparent; cursor: pointer; }
+    .quit-btn:hover { background: #fef2f2; }
+
+    /* Summary screen */
+    #summary { display: none; text-align: center; }
+    .summary-emoji { font-size: 52px; margin-bottom: 1rem; }
+    .summary-title { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+    .summary-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+
+    /* Play again button */
+    .replay-btn { font-size: 14px; border: 1px solid #ccc; border-radius: 8px; padding: 8px 24px; background: #fff; cursor: pointer; }
+    .replay-btn:hover { background: #f5f5f5; }
+
+    /* Python code section */
+    .code-section { max-width: 480px; width: 100%; margin-top: 2rem; }
+    .code-section h3 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+    .code-section p  { font-size: 13px; color: #888; margin-bottom: 1rem; }
+    .code-section pre { background: #f4f4f4; border: 1px solid #ddd; border-radius: 8px; padding: 1.25rem; font-size: 13px; overflow-x: auto; line-height: 1.6; margin: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- GAME -->
+  <div class="container">
+
+    <div id="game">
+      <div class="scores">
+        <div class="score-card">
+          <div class="score-label">Wins</div>
+          <div id="wins" class="score-value win-color">0</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Ties</div>
+          <div id="ties" class="score-value tie-color">0</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Losses</div>
+          <div id="losses" class="score-value lose-color">0</div>
+        </div>
+      </div>
+
+      <div class="moves">
+        <button class="move-btn" onclick="play('r')">🪨</button>
+        <button class="move-btn" onclick="play('p')">📄</button>
+        <button class="move-btn" onclick="play('s')">✂️</button>
+      </div>
+      <div class="move-labels">
+        <span>Rock</span><span>Paper</span><span>Scissors</span>
+      </div>
+
+      <div id="arena" class="arena">
+        <div class="placeholder">Choose your move above</div>
+      </div>
+
+      <button class="quit-btn" onclick="quit()">✕ Quit</button>
+    </div>
+
+    <div id="summary">
+      <div class="summary-emoji" id="summary-emoji"></div>
+      <div class="summary-title" id="summary-title"></div>
+      <div class="summary-sub"   id="summary-sub"></div>
+
+      <div class="scores">
+        <div class="score-card">
+          <div class="score-label">Wins</div>
+          <div id="s-wins" class="score-value win-color"></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Ties</div>
+          <div id="s-ties" class="score-value tie-color"></div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Losses</div>
+          <div id="s-losses" class="score-value lose-color"></div>
+        </div>
+      </div>
+
+      <button class="replay-btn" onclick="restart()">↺ Play again</button>
+    </div>
+
+  </div>
+
+  <!-- PYTHON CODE SECTION -->
+  <div class="code-section">
+    <h3>Original Python code</h3>
+    <p>This game was originally written in Python, then converted to JavaScript for the browser.</p>
+    <pre><code>import random
+
+r = 'ROCK'
+p = 'PAPER'
+s = 'SCISSORS'
+q = 'QUIT'
+Win = 0
+Tie = 0
+Lose = 0
+my_list = [r, p, s]
+
+while True:
+    random_three = random.choice(my_list)
+
+    print('ROCK, PAPER, SCISSORS')
+    print('%s Win, %s Lose, %s Tie' % (Win, Lose, Tie))
+    print('Enter your move: (r)ock (p)aper (s)cissors or (q)uit')
+
+    user_input = input('>')
+
+    if user_input == 'q':
+        print('You want to quit.')
+        break
+    elif user_input == 'p':
+        print('PAPER versus...')
+        print(random_three)
+    elif user_input == 'r':
+        print('ROCK versus...')
+        print(random_three)
+    elif user_input == 's':
+        print('SCISSORS versus...')
+        print(random_three)
+    else:
+        print('Invalid move. Please enter r, p, s or q.')
+        continue
+
+    if user_input == random_three:
+        print('It is a tie!')
+        Tie = Tie + 1
+    elif (user_input == 'p' and random_three == 'ROCK'
+        or user_input == 'r' and random_three == 'SCISSORS'
+        or user_input == 's' and random_three == 'PAPER'):
+        print('You win!')
+        Win = Win + 1
+    else:
+        print('You lose!')
+        Lose = Lose + 1
+    </code></pre>
+  </div>
+
+<script>
+  const moves = {
+    r: { label: 'Rock',     emoji: '🪨' },
+    p: { label: 'Paper',    emoji: '📄' },
+    s: { label: 'Scissors', emoji: '✂️' }
+  };
+  const cpuKeys = ['r', 'p', 's'];
+  let w = 0, t = 0, l = 0;
+
+  function getResult(user, cpu) {
+    if (user === cpu) return 'tie';
+    if (
+      (user === 'r' && cpu === 's') ||
+      (user === 'p' && cpu === 'r') ||
+      (user === 's' && cpu === 'p')
+    ) return 'win';
+    return 'lose';
+  }
+
+  function play(user) {
+    const cpu    = cpuKeys[Math.floor(Math.random() * 3)];
+    const result = getResult(user, cpu);
+
+    let msg = '', color = '';
+    if (result === 'win')       { w++; msg = 'You win!';     color = '#2a9d5c'; }
+    else if (result === 'tie')  { t++; msg = "It's a tie!";  color = '#333';    }
+    else                        { l++; msg = 'You lose!';    color = '#e24b4a'; }
+
+    document.getElementById('wins').textContent   = w;
+    document.getElementById('ties').textContent   = t;
+    document.getElementById('losses').textContent = l;
+
+    document.getElementById('arena').innerHTML = `
+      <div class="vs-row">
+        <div class="player">
+          <div class="player-emoji">${moves[user].emoji}</div>
+          <div class="player-label">You</div>
+        </div>
+        <div class="vs-text">vs</div>
+        <div class="player">
+          <div class="player-emoji">${moves[cpu].emoji}</div>
+          <div class="player-label">Computer</div>
+        </div>
+      </div>
+      <div class="result-text" style="color:${color};">${msg}</div>
+      <div class="match-text">${moves[user].label} vs ${moves[cpu].label}</div>
+    `;
+  }
+
+  function quit() {
+    const total = w + t + l;
+    let emoji, title, sub;
+
+    if (total === 0) {
+      emoji = '👋'; title = 'No rounds played'; sub = 'Come back anytime!';
+    } else if (w > l) {
+      emoji = '🏆'; title = 'You won overall!';      sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    } else if (l > w) {
+      emoji = '😬'; title = 'Computer won overall';  sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    } else {
+      emoji = '🤝'; title = 'Overall tie!';           sub = `${total} round${total !== 1 ? 's' : ''} played`;
+    }
+
+    document.getElementById('summary-emoji').textContent = emoji;
+    document.getElementById('summary-title').textContent = title;
+    document.getElementById('summary-sub').textContent   = sub;
+    document.getElementById('s-wins').textContent        = w;
+    document.getElementById('s-ties').textContent        = t;
+    document.getElementById('s-losses').textContent      = l;
+
+    document.getElementById('game').style.display    = 'none';
+    document.getElementById('summary').style.display = 'block';
+  }
+
+  function restart() {
+    w = 0; t = 0; l = 0;
+    document.getElementById('wins').textContent    = 0;
+    document.getElementById('ties').textContent    = 0;
+    document.getElementById('losses').textContent  = 0;
+    document.getElementById('arena').innerHTML     = '<div class="placeholder">Choose your move above</div>';
+    document.getElementById('summary').style.display = 'none';
+    document.getElementById('game').style.display    = 'block';
+  }
+</script>
+
+</body>
+</html>
