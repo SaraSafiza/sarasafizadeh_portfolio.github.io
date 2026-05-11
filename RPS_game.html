@@ -195,5 +195,58 @@
     document.getElementById('game').style.display    = 'block';
   }
 </script>
+
+  <div style="max-width:480px; margin:2rem auto; font-family:sans-serif;">
+  <h3 style="font-size:16px; font-weight:500; margin-bottom:0.5rem;">Original Python code</h3>
+  <p style="font-size:13px; color:#888; margin-bottom:1rem;">This game was originally written in Python, then converted to JavaScript for the browser.</p>
+  <pre style="background:#f4f4f4; border:1px solid #ddd; border-radius:8px; padding:1.25rem; font-size:13px; overflow-x:auto; line-height:1.6;"><code>import random
+
+r = 'ROCK'
+p = 'PAPER'
+s = 'SCISSORS'
+q = 'QUIT'
+Win = 0
+Tie = 0
+Lose = 0
+my_list = [r, p, s]
+
+while True:
+    random_three = random.choice(my_list)
+
+    print('ROCK, PAPER, SCISSORS')
+    print('%s Win, %s Lose, %s Tie' % (Win, Lose, Tie))
+    print('Enter your move: (r)ock (p)aper (s)cissors or (q)uit')
+
+    user_input = input('>')
+
+    if user_input == 'q':
+        print('You want to quit.')
+        break
+    elif user_input == 'p':
+        print('PAPER versus...')
+        print(random_three)
+    elif user_input == 'r':
+        print('ROCK versus...')
+        print(random_three)
+    elif user_input == 's':
+        print('SCISSORS versus...')
+        print(random_three)
+    else:
+        print('Invalid move. Please enter r, p, s or q.')
+        continue
+
+    if user_input == random_three:
+        print('It is a tie!')
+        Tie = Tie + 1
+    elif (user_input == 'p' and random_three == 'ROCK'
+        or user_input == 'r' and random_three == 'SCISSORS'
+        or user_input == 's' and random_three == 'PAPER'):
+        print('You win!')
+        Win = Win + 1
+    else:
+        print('You lose!')
+        Lose = Lose + 1
+</code></pre>
+</div>
 </body>
 </html>
